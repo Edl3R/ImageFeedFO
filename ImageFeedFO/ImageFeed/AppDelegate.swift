@@ -3,6 +3,8 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
+    
+    
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication
@@ -16,16 +18,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         configurationForConnecting connectingSceneSession: UISceneSession,
         options: UIScene.ConnectionOptions
     ) -> UISceneConfiguration {
-        return UISceneConfiguration(
-            name: "Default Configuration",
+        let sceneConfiguration = UISceneConfiguration(
+            name: "Main",
             sessionRole: connectingSceneSession.role
         )
+        sceneConfiguration.delegateClass = SceneDelegate.self   
+        return sceneConfiguration
     }
-    
-    func application(
-        _ application: UIApplication,
-        didDiscardSceneSessions sceneSessions: Set<UISceneSession>
-    ) {
-    }
-    
 }
+
