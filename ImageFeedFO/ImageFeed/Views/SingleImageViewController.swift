@@ -1,59 +1,84 @@
 import UIKit
+import Kingfisher
 
 final class SingleImageViewController: UIViewController {
-    
-    @IBOutlet private var scrollView: UIScrollView!
-    @IBOutlet private var imageView: UIImageView!
-    
-    var image: UIImage? {
+
+    @IBOutlet private weak var scrollView: UIScrollView!
+    @IBOutlet private weak var imageView: UIImageView!
+
+    var photo: Photo? {
         didSet {
-            guard isViewLoaded, let image else { return }
-            
-            imageView.image = image
-            imageView.frame.size = image.size
-            rescaleAndCenterImageInScrollView(image: image)
+            guard isViewLoaded else { return }
+            loadImage()
         }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        scrollView.minimumZoomScale = 0.1
-        scrollView.maximumZoomScale = 1.25
-        
-        guard let image else { return }
-        imageView.image = image
-        imageView.frame.size = image.size
-        rescaleAndCenterImageInScrollView(image: image)
+        configureScrollView()
+        loadImage()
     }
-    
-    @IBAction func didTapShareButton(_ sender: UIButton) {
-        guard let image else { return }
-        let share = UIActivityViewController(
+
+    @IBAction private func didTapShareButton(_ sender: UIButton) {
+        guard let image = imageView.image else { return }
+
+        let activityVC = UIActivityViewController(
             activityItems: [image],
             applicationActivities: nil
         )
-        present(share, animated: true, completion: nil)
+        present(activityVC, animated: true)
     }
-    
+
     @IBAction private func didTapBackButton() {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
     }
-    
-    private func rescaleAndCenterImageInScrollView(image: UIImage) {
-        let minZoomScale = scrollView.minimumZoomScale
-        let maxZoomScale = scrollView.maximumZoomScale
+
+    private func configureScrollView() {
+        scrollView.minimumZoomScale = 0.1
+        scrollView.maximumZoomScale = 1.25
+        scrollView.delegate = self
+    }
+
+    private func loadImage() {
+        guard
+            let photo = photo,
+            let url = URL(string: photo.largeImageURL)
+        else { return }
+        
+        imageView.kf.indicatorType = .activity
+        UIBlockingProgressHUD.show()
+        imageView.kf.setImage(with: url) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            guard let self = self else { return }
+
+            if case .success(let value) = result {
+                self.imageView.frame.size = value.image.size
+                self.rescaleAndCenterImage(value.image)
+            }
+        }
+    }
+
+    private func rescaleAndCenterImage(_ image: UIImage) {
         view.layoutIfNeeded()
-        let visibleRectSize = scrollView.bounds.size
+
+        let visibleSize = scrollView.bounds.size
         let imageSize = image.size
-        let hScale = visibleRectSize.width / imageSize.width
-        let vScale = visibleRectSize.height / imageSize.height
-        let scale = min(maxZoomScale, max(minZoomScale, min(hScale, vScale)))
+
+        let widthScale = visibleSize.width / imageSize.width
+        let heightScale = visibleSize.height / imageSize.height
+        let scale = min(
+            scrollView.maximumZoomScale,
+            max(scrollView.minimumZoomScale, min(widthScale, heightScale))
+        )
+
         scrollView.setZoomScale(scale, animated: false)
         scrollView.layoutIfNeeded()
-        let newContentSize = scrollView.contentSize
-        let x = (newContentSize.width - visibleRectSize.width) / 2
-        let y = (newContentSize.height - visibleRectSize.height) / 2
-        scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
+
+        let contentSize = scrollView.contentSize
+        let offsetX = (contentSize.width - visibleSize.width) / 2
+        let offsetY = (contentSize.height - visibleSize.height) / 2
+
+        scrollView.setContentOffset(CGPoint(x: offsetX, y: offsetY), animated: false)
     }
 }
 
