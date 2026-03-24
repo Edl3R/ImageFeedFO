@@ -191,6 +191,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GbM-Hg-lTn">
                                 <rect key="frame" x="16" y="690" width="382" height="48"/>
                                 <color key="backgroundColor" name="YP White"/>
+                                <accessibility key="accessibilityConfiguration" identifier="Authenticate"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="yJb-lk-duL"/>
                                 </constraints>
@@ -229,7 +230,7 @@
         <!--Web View View Controller-->
         <scene sceneID="XKN-Gv-VBR">
             <objects>
-                <viewController id="EMi-1Z-EJ2" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WebViewViewController" id="EMi-1Z-EJ2" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9VF-jf-Sac" customClass="web">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -249,6 +250,9 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="4LC-by-qA3"/>
                         <color key="backgroundColor" name="YP White"/>
+                        <accessibility key="accessibilityConfiguration" identifier="UnsplashWebView">
+                            <bool key="isElement" value="YES"/>
+                        </accessibility>
                         <constraints>
                             <constraint firstItem="DaS-kH-3FX" firstAttribute="top" secondItem="4LC-by-qA3" secondAttribute="top" id="6aj-se-Jug"/>
                             <constraint firstItem="E9f-YV-c4A" firstAttribute="leading" secondItem="4LC-by-qA3" secondAttribute="leading" id="CUG-bJ-IB4"/>

@@ -2,16 +2,20 @@ import UIKit
 import Kingfisher
 
 final class ImagesListViewController: UIViewController {
-     
+    // MARK: - Constants
+    
     private let showsSingleImageSegueIdentifier = "ShowSingleImage"
     
+    // MARK: - UI
     private let placeholderImage = UIImage(named: "Stub")
     
     @IBOutlet private var tableView: UITableView!
     
+    // MARK: - Properties
     private var photos: [Photo] = []
     private let photoService = ImagesListService.shared
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -20,16 +24,17 @@ final class ImagesListViewController: UIViewController {
         photoService.fetchPhotosNextPage()
     }
     
+    // MARK: - Private Methods
     private func setupTableView() {
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-              tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-              tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-              tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-              tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-          ])
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
     }
     
     private func subscribeToNotifications() {
@@ -59,14 +64,15 @@ final class ImagesListViewController: UIViewController {
             tableView.insertRows(at: indexPaths, with: .automatic)
         }
     }
-
+    
+    // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showsSingleImageSegueIdentifier {
             guard
                 let viewController = segue.destination as? SingleImageViewController,
                 let indexPath = sender as? IndexPath
             else { return }
-
+            
             viewController.photo = photos[indexPath.row]
         }
     }
@@ -110,7 +116,7 @@ extension ImagesListViewController: UITableViewDataSource {
 }
 
 extension ImagesListViewController: UITableViewDelegate {
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: showsSingleImageSegueIdentifier, sender: indexPath)
     }
@@ -135,11 +141,11 @@ extension ImagesListViewController: UITableViewDelegate {
         }
     }
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-            let lastRowIndex = photos.count - 1
-            if indexPath.row == lastRowIndex {
-                photoService.fetchPhotosNextPage()
-            }
+        let lastRowIndex = photos.count - 1
+        if indexPath.row == lastRowIndex {
+            photoService.fetchPhotosNextPage()
         }
+    }
 }
 
 extension ImagesListViewController: ImageListCellDelegate {

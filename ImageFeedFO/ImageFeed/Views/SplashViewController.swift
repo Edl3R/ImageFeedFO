@@ -86,6 +86,8 @@ final class SplashViewController: UIViewController {
             }
         }
     }
+    
+    
 }
 
 extension SplashViewController {
@@ -116,3 +118,4 @@ extension SplashViewController: AuthViewControllerDelegate {
         fetchProfile(token: token)
     }
 }
+

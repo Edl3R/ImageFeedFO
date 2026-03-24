@@ -4,12 +4,20 @@ import SwiftKeychainWrapper
 
 final class OAuth2TokenStorage {
     
+    // MARK: - Singleton
+    
     static let shared = OAuth2TokenStorage()
     private init() {}
     
+    // MARK: - Dependencies
+    
     private let userDefaults = UserDefaults.standard
     
+    // MARK: - Constants
+    
     private let tokenKey = "Auth token"
+    
+    // MARK: - Public API
     
     var token: String? {
         get {
@@ -25,6 +33,7 @@ final class OAuth2TokenStorage {
     }
 }
 
+// MARK: - LogOut
 extension OAuth2TokenStorage {
     func clearToken() {
         KeychainWrapper.standard.removeObject(forKey: tokenKey)
