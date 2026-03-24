@@ -9,20 +9,22 @@ final class ProfileViewController: UIViewController {
     private let descriptionLabel = UILabel()
     private lazy var logoutButton = UIButton()
     
+    // MARK: - Properties
     private var profileImageServiceObserver: NSObjectProtocol?
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         view.backgroundColor = UIColor(named: "YP Black")
         setupUI()
-
+        
         if let profile = ProfileService.shared.profile {
             updateProfileDetails(with: profile)
         } else {
             nameLabel.text = "Загрузка..."
         }
-
+        
         profileImageServiceObserver = NotificationCenter.default
             .addObserver(
                 forName: ProfileImageService.didChangeNotification,
@@ -31,7 +33,7 @@ final class ProfileViewController: UIViewController {
             ) { [weak self] _ in
                 self?.updateAvatar()
             }
-
+        
         updateAvatar()
     }
     
@@ -65,6 +67,7 @@ final class ProfileViewController: UIViewController {
             }
     }
     
+    // MARK: - Private Methods
     private func updateProfileDetails(with profile: Profile) {
         nameLabel.text = profile.name.isEmpty
         ? "Имя не указано"
@@ -86,11 +89,15 @@ final class ProfileViewController: UIViewController {
         nameLabel.textColor = UIColor(named: "YP White")
         nameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        // ДОБАВЛЕНО: accessibilityIdentifier для тестов
+        nameLabel.accessibilityIdentifier = "Name Label"
         view.addSubview(nameLabel)
         
         loginLabel.textColor = UIColor(named: "YP Gray")
         loginLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         loginLabel.translatesAutoresizingMaskIntoConstraints = false
+        // ДОБАВЛЕНО: accessibilityIdentifier для тестов
+        loginLabel.accessibilityIdentifier = "Login Name Label"
         view.addSubview(loginLabel)
         
         descriptionLabel.textColor = UIColor(named: "YP White")
@@ -101,6 +108,8 @@ final class ProfileViewController: UIViewController {
         logoutButton.setImage(UIImage(named: "Exit"), for: .normal)
         logoutButton.tintColor = UIColor(named: "YP Red")
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
+        // ДОБАВЛЕНО: accessibilityIdentifier для тестов
+        logoutButton.accessibilityIdentifier = "Logout Button"
         view.addSubview(logoutButton)
         
         NSLayoutConstraint.activate([
@@ -145,7 +154,7 @@ final class ProfileViewController: UIViewController {
         )
         alertController.addAction(yesAction)
         alertController.addAction(noAction)
-
+        
         present(alertController, animated: true)
     }
 }

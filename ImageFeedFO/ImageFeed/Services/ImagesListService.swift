@@ -28,15 +28,23 @@ struct Photo {
 
 final class ImagesListService {
     
+    // MARK: - Singleton
+    
     static let shared = ImagesListService()
     private init() {}
+
+    // MARK: - Public Properties
 
     private(set) var photos: [Photo] = []
     
     static let didChangeNotification = Notification.Name("ImagesListServiceDidChange")
     
+    // MARK: - Private Properties
+    
     private var lastLoadedPage: Int = 0
     private var task: URLSessionTask?
+
+    // MARK: - Public Methods
 
     func fetchPhotosNextPage() {
         guard task == nil else { return }
@@ -69,6 +77,7 @@ final class ImagesListService {
         task.resume()
     }
     
+    // MARK: - Network Requests
     private func makePhotosRequest(page: Int) -> URLRequest? {
         var components = URLComponents()
         components.scheme = "https"
@@ -95,6 +104,7 @@ final class ImagesListService {
         return request
     }
     
+    // MARK: - Likes
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
         let request: URLRequest?
         
@@ -177,6 +187,9 @@ final class ImagesListService {
         return request
     }
 }
+
+
+// MARK: - Logout
 
 extension ImagesListService {
     func exitImagesListService() {
